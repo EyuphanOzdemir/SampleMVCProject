@@ -1,0 +1,116 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Rourier</title>
+    <link href="~/lib/bootstrap/css/bootstrap.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="~/css/site.css" />
+</head>
+<body>
+    @{
+        bool showNavigationMenu = true;
+
+        if (ViewBag.NoNavigationMenu != null)
+        {
+            showNavigationMenu = !ViewBag.NoNavigationMenu;
+        }
+
+        bool showHeader = true;
+
+        if (ViewBag.NoHeader != null)
+        {
+            showHeader = !ViewBag.NoHeader;
+        }
+
+        bool showMessage = true;
+
+        if (ViewBag.NoMessage != null)
+        {
+            showMessage = !ViewBag.NoMessage;
+        }
+    }
+
+    @if (showNavigationMenu)
+    {
+        <header>
+            <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-dark navbar-dark border-bottom box-shadow mb-3">
+                <div class="container">
+                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                            aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
+                        <ul class="navbar-nav flex-grow-1">
+                            @{
+
+                                if (User.Identity.IsAuthenticated)
+                                {
+                                    <li class="nav-item">
+                                        <a class="nav-link" asp-area="" asp-controller="Companies" asp-action="Index">Companies</a>
+                                    </li>
+
+
+                                    <li class="nav-item">
+                                        <a class="nav-link" asp-area="" asp-controller="Contacts" asp-action="Index">Contacts</a>
+                                    </li>
+
+
+                                    @if (User.IsInRole("Admin"))
+                                    {
+                                        <li class="nav-item">
+                                            <a class="nav-link" asp-area="" asp-controller="Users" asp-action="Index">Users</a>
+                                        </li>
+
+                                    }
+
+                                    <li class="nav-item">
+                                        <a class="nav-link" asp-area="" asp-controller="Account" asp-action="ChangePassword">Change Password</a>
+                                    </li>
+
+                                    <li class="nav-item">
+                                        <a class="nav-link" asp-area="" asp-controller="Account" asp-action="Logout">Log out</a>
+                                    </li>
+
+                                }
+                            }
+
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+        </header>
+    }
+    <div class="container">
+        <partial name="_CookieConsentPartial" />
+        <main role="main" class="pb-3">
+            @if (showMessage)
+            {
+                @await Html.PartialAsync("_Message")
+            }
+            
+            @if (showHeader)
+            {
+                <h1>@ViewData["Title"]</h1>
+            }
+            
+            @RenderBody()
+        </main>
+    </div>
+    <footer class="border-top footer text-muted">
+        <div class="container">
+            &copy; 2019 - Rourier
+        </div>
+    </footer>
+
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/lib/jquery/jquery.js"></script>
+    <script src="~/lib/bootstrap/js/bootstrap.bundle.js"></script>
+    <script src="~/lib/bootstrap/js/bootstrap.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>
+
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

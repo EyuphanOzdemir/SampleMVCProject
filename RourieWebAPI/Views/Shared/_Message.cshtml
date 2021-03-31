@@ -1,0 +1,17 @@
+﻿@{
+    var message = "";
+    if (ViewBag.Message != null)
+        message = @ViewBag.Message;
+    else if (TempData["Message"] != null)
+        message = (string)TempData["Message"];
+
+    if (!String.IsNullOrEmpty(message))
+    {
+        <div class="alert alert-success" id="success-alert">
+            <button type="button" class="close" data-dismiss="alert">x</button>
+            @message
+        </div>
+    }
+}
+
+

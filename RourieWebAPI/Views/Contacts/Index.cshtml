@@ -1,0 +1,122 @@
+﻿@model RourieWebAPI.Models.ContactListViewModel
+<style>
+    fieldset {
+        background-color: #eeeeee;
+    }
+
+    legend {
+        background-color: gray;
+        color: white;
+        padding: 5px 10px;
+    }
+</style>
+
+
+@{
+    ViewData["Title"] = "Contacts";
+}
+@if (Model.Contacts.Count() == 0)
+{
+    if (ViewBag.Message == null)
+    {
+        <div class="alert alert-warning" id="warning-alert">
+            <button type="button" class="close" data-dismiss="alert">x</button>
+            There is no contact in the system.
+        </div>
+    }
+}
+
+
+@{
+    var prevId = @Model.PageId - 1;
+    var nextId = @Model.PageId + 1;
+
+    string rowCountMessage = "";
+    if (@Model.RowCount == 0)
+    {
+        rowCountMessage = "No contact found!";
+    }
+    else
+    {
+        rowCountMessage = @Model.RowCount + " contact(s) found";
+    }
+}
+
+
+
+<p>
+    <a asp-action="Create" class="btn btn-primary btn-custom-large">Create New Contact</a>
+    <button class="btn btn-primary btn-custom-large" type="button" data-toggle="collapse" data-target="#searchPanel" aria-expanded="false" aria-controls="searchPanel">
+        Search contact
+    </button>
+</p>
+<div class="row text-center collapse" id="searchPanel">
+    <div class="col-md-4">
+        <form asp-action="Index" method="get">
+            <fieldset>
+                <legend class="mylegend">Search contacts</legend>
+                <div class="form-group text-left">
+                    <label class="control-label">Company:</label>
+                    <select asp-for=SearchCompanyId class="form-control" asp-items="@ViewBag.CompanySelectList"></select>
+                    <label asp-for=SearchTerm class="control-label">Name:</label>
+                    <input asp-for=SearchTerm class="form-control valid" type="text" data-val="true" data-val-minlength="The search term should have at least 3 characters" data-val-minlength-min="3" placeholder="Enter a search term with at least 3 characters">
+                    <span class="text-danger field-validation-valid" data-valmsg-for="SearchTerm" data-valmsg-replace="true"></span>
+                    <span>@rowCountMessage</span>
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="Search" class="btn btn-primary btn-custom" />
+                </div>
+            </fieldset>
+        </form>
+    </div>
+</div>
+
+<div class="tab-pane">
+    @if (prevId > 0)
+    {
+        <a class="btn btn-primary m-0 btn-custom btn-navigation" asp-action="Index" asp-route-pageId="1" asp-route-SearchTerm="@Model.SearchTerm" asp-route-SearchCompanyId="@Model.SearchCompanyId"> First  </a>
+        <a class="btn btn-primary m-1 btn-custom btn-navigation" asp-action="Index" asp-route-pageId="@prevId" asp-route-SearchTerm="@Model.SearchTerm" asp-route-SearchCompanyId="@Model.SearchCompanyId"> Previous   </a>
+    }
+
+
+    @if (nextId <= Model.GroupCount)
+    {
+        <a class="btn btn-primary m-1 btn-custom btn-navigation" asp-action="Index" asp-route-pageId="@nextId" asp-route-SearchTerm="@Model.SearchTerm" asp-route-SearchCompanyId="@Model.SearchCompanyId"> Next</a>
+        <a class="btn btn-primary m-1 btn-custom btn-navigation" asp-action="Index" asp-route-pageId="@Model.GroupCount" asp-route-SearchTerm="@Model.SearchTerm" asp-route-SearchCompanyId="@Model.SearchCompanyId"> Last  </a>
+    }
+</div>
+
+<table class="table">
+    <tbody>
+        @foreach (var item in Model.Contacts)
+        {
+            <tr>
+                <td>
+                    <div class="card m-3">
+                        <div class="card-header text-center">
+                            <div>
+                                <span>Contact name:</span>
+                                <span><strong>@Html.DisplayFor(modelItem => item.Name)</strong></span>
+                            </div>
+                            <div>
+                                <span>Company:</span>
+                                <span><strong>@Html.DisplayFor(modelItem => item.Company.Name)</strong></span>
+                            </div>
+                            <div>
+                                <span>Job title:</span>
+                                <span><strong>@Html.DisplayFor(modelItem => item.JobTitle)</strong></span>
+                            </div>
+                        </div>
+                        <div class="card-footer text-center">
+                            <a asp-action="Details" asp-controller="Companies" asp-route-id="@item.CompanyId" class="btn btn-primary btn-custom-large">Go to company</a>
+                            <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-primary btn-custom">Edit</a>
+                            <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-primary btn-custom">Details</a>
+                            <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-primary btn-custom">Delete</a>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+

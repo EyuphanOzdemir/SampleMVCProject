@@ -1,0 +1,38 @@
+﻿@model IEnumerable<DBAccessLibrary.User>
+
+@{
+    ViewData["Title"] = "Users";
+}
+
+
+
+<p>
+    <a asp-action="Create" class="btn btn-primary btn-custom-large">Create User</a>
+</p>
+
+<table class="table">
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    <div class="card m-3">
+                        <div class="card-header text-center">
+                            <div>
+                                <span>User Name:</span>
+                                <span><strong>@Html.DisplayFor(modelItem => item.UserName)</strong></span>
+                            </div>
+                            <div>
+                                <span>User Type:</span>
+                                <span><strong>@Html.DisplayFor(model => item.UserTypeString)</strong></span>
+                            </div>
+                        </div>
+                        <div class="card-footer text-center">
+                            <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-primary btn-custom">Delete</a>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
